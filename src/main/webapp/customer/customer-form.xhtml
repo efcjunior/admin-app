@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces" template="#{layoutMB.template}"> 
+    <ui:define name="title">
+         Customer #{msg['title.form']} 
+    </ui:define> 
+    <ui:define name="body"> 
+        <f:metadata> 
+            <f:viewParam name="id" value="#{customerFormMB.id}" converter="javax.faces.Long" /> 
+            <!-- use view action if you are in a Java EE 7 server: <f:viewAction action="#{customerFormMB.init()}"/>--> 
+            <f:event type="preRenderView" listener="#{customerFormMB.init}" /> 
+        </f:metadata> 
+        <adm:breadcrumb title="#{empty customerFormMB.id ? msg['label.new'].concat(' Customer') : 'Customer '.concat(customerFormMB.id)}" link="customer/customer-form.xhtml?id=#{customerFormMB.id}" /> 
+        <h:form id="form" prependId="false"> 
+            <p:focus context="@form" /> 
+            <p:panel styleClass="box-primary card"> 
+                <div id="main-buttons" class="hidden-sm hidden-xs"> 
+                    <p:commandButton value="#{msg['label.save']}" action="#{customerFormMB.save}" update="@form" icon="fa fa-check" styleClass="btn-primary" /> 
+                    <p:spacer width="5" rendered="#{customerFormMB.isNew()}" /> 
+                    <p:commandButton value="#{msg['label.clear']}" action="#{customerFormMB.clear}" process="@this" icon="fa fa-refresh" styleClass="btn-success" update="@form" rendered="#{customerFormMB.isNew()}" resetValues="true" /> 
+                    <p:spacer width="5" rendered="#{not customerFormMB.isNew()}" /> 
+                    <p:commandButton value="#{msg['label.delete']}" action="#{customerFormMB.remove}" process="@this" rendered="#{not customerFormMB.isNew()}" icon="fa fa-trash" styleClass="btn-danger"> 
+                        <f:setPropertyActionListener value="true" target="#{facesContext.externalContext.flash.keepMessages}" /> 
+                        <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger" /> 
+                    </p:commandButton> 
+                    <p:spacer width="5" /> 
+                    <p:commandButton value="#{msg['label.back']}" immediate="true" action="/customer/customer-list?faces-redirect=true" process="@this" icon="fa fa-reply" /> 
+                </div> 
+                <p:splitButton value="#{msg['label.save']}" action="#{customerFormMB.save}" update="@form" icon="fa fa-check" styleClass="hidden-md hidden-lg btn-primary"> 
+                    <p:menuitem value="#{msg['label.clear']}" action="#{customerFormMB.clear}" process="@this" update="@form" rendered="#{customerFormMB.isNew()}" resetValues="true" icon="fa fa-refresh" /> 
+                    <p:menuitem value="#{msg['label.delete']}" action="#{customerFormMB.remove}" process="@this" rendered="#{not customerFormMB.isNew()}" icon="fa fa-trash"> 
+                        <f:setPropertyActionListener value="true" target="#{facesContext.externalContext.flash.keepMessages}" /> 
+                        <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger" /> 
+                    </p:menuitem> 
+                    <p:separator /> 
+                    <p:menuitem value="#{msg['label.back']}" action="/customer/customer-list?faces-redirect=true" process="@this" immediate="true" icon="fa fa-reply" /> 
+                </p:splitButton> 
+                <hr /> 
+                <div class="ui-g ui-fluid"> 
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:outputLabel for="id" value="Id" /> 
+                        </div> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:inputText id="id" value="#{customerFormMB.entity.id}" readonly="true" styleClass="form-control ui-state-disabled" style="width: 100%" /> 
+                            <span class="help-block"> 
+                                <p:message for="id" /> </span> 
+                        </div> 
+                    </div> 
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:outputLabel for="name" value="Name" /> 
+                        </div> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:inputText id="name" value="#{customerFormMB.entity.name}" maxlength="100" required="true" requiredMessage="Name #{msg['label.is-required']}." /> 
+                            <span class="help-block"> 
+                                <p:message for="name" /> </span> 
+                        </div> 
+                    </div> 
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:outputLabel for="email" value="Email" /> 
+                        </div> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:inputText id="email" value="#{customerFormMB.entity.email}" maxlength="100" required="true" requiredMessage="Email #{msg['label.is-required']}." /> 
+                            <span class="help-block"> 
+                                <p:message for="email" /> </span> 
+                        </div> 
+                    </div> 
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:outputLabel for="dateOfBirth" value="DateOfBirth" /> 
+                        </div> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:datePicker id="dateOfBirth" value="#{customerFormMB.entity.dateOfBirth}" showOn="both" required="true" requiredMessage="DateOfBirth #{msg['label.is-required']}." /> 
+                            <span class="help-block"> 
+                                <p:message for="dateOfBirth" /> </span> 
+                        </div> 
+                    </div> 
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:outputLabel for="city" value="City" /> 
+                        </div> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:autoComplete id="city" value="#{customerFormMB.entity.city}" completeMethod="#{customerFormMB.completeCity}" minQueryLength="2" dropdown="true" var="city" itemLabel="#{city.name}" itemValue="#{city}" converter="entityConverter" /> 
+                            <span class="help-block"> 
+                                <p:message for="city" /> </span> 
+                        </div> 
+                    </div> 
+                    <div class="ui-sm-12 ui-g-6 ui-g-nopad"> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:outputLabel for="state" value="State" /> 
+                        </div> 
+                        <div class="ui-sm-12 ui-g-11"> 
+                            <p:autoComplete id="state" value="#{customerFormMB.entity.state}" completeMethod="#{customerFormMB.completeState}" minQueryLength="2" dropdown="true" var="state" itemLabel="#{state.name}" itemValue="#{state}" converter="entityConverter" /> 
+                            <span class="help-block"> 
+                                <p:message for="state" /> </span> 
+                        </div> 
+                    </div> 
+                    <h:panelGroup id="footer" layout="block" styleClass="hidden-sm hidden-md hidden-lg"> 
+                        <hr /> 
+                        <p:splitButton value="#{msg['label.save']}" action="#{customerFormMB.save}" update="@form" icon="fa fa-check" styleClass="hidden-md hidden-lg btn-primary"> 
+                            <p:menuitem value="#{msg['label.clear']}" action="#{customerFormMB.clear}" process="@this" update="@form" rendered="#{customerFormMB.isNew()}" resetValues="true" icon="fa fa-refresh" /> 
+                            <p:menuitem value="#{msg['label.delete']}" action="#{customerFormMB.remove}" process="@this" rendered="#{not customerFormMB.isNew()}" icon="fa fa-trash"> 
+                                <f:setPropertyActionListener value="true" target="#{facesContext.externalContext.flash.keepMessages}" /> 
+                                <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger" /> 
+                            </p:menuitem> 
+                            <p:separator /> 
+                            <p:menuitem value="#{msg['label.back']}" action="/customer/customer-list?faces-redirect=true" process="@this" immediate="true" icon="fa fa-reply" /> 
+                        </p:splitButton> 
+                    </h:panelGroup> 
+                </div>
+            </p:panel> 
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger box-solid"> 
+                <p:commandButton value="#{msg['label.yes']}" type="button" styleClass="btn-material btn-primary ui-confirmdialog-yes" icon="fa fa-check" /> 
+                <p:commandButton value="#{msg['label.no']}" type="button" styleClass="btn-material btn-danger ui-confirmdialog-no" icon="fa fa-close" /> 
+            </p:confirmDialog> 
+        </h:form> 
+    </ui:define> 
+</ui:composition>
